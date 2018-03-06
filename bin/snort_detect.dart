@@ -82,14 +82,16 @@ void main(List<String> args) {
   print("First ${snortRecords.first}");
   print("Last ${snortRecords.last}");
 
+  int minSeconds = 5 * 60 * 60 - 10;
+  int maxSeconds = 5 * 60 * 60 + 10;
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
-      print("Search for snort match for $truth");
       return snortRecords.any((snort) =>
         truth.attacker == snort.attacker &&
-        truth.victim == snort.victim);
-
-
+        truth.victim == snort.victim &&
+        snort.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
+        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds
+        );
   });
 
   var matchOutput = matches.map((m) => m.id).join(", ");
@@ -102,8 +104,13 @@ class Truth {
   String time;
   String attacker;
   String victim;
+  DateTime dateTime;
 
-  Truth(this.id, this.date, this.time, this.attacker, this.victim);
+  Truth(this.id, this.date, this.time, this.attacker, this.victim){
+    var dateSplits = date.split("/");
+    var ISO = "${dateSplits[2]}-${dateSplits[0]}-${dateSplits[1]}";
+    dateTime = DateTime.parse("$ISO $time");
+  }
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
     "Victim $victim";
@@ -115,8 +122,12 @@ class Snort {
   String time;
   String attacker;
   String victim;
+  DateTime dateTime;
 
-  Snort(this.id, this.date, this.time, this.attacker, this.victim);
+  Snort(this.id, this.date, this.time, this.attacker, this.victim){
+    dateTime = DateTime.parse("$date $time");
+  }
+
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
     "Victim $victim";
