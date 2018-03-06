@@ -15,30 +15,29 @@ void main(List<String> args) {
   var lines = new File(truthFile).readAsLinesSync();
 
   lines.forEach( (line) {
-      if(line == "") {
-        //handle new record
-        var id = oneRecord[0].split(":")[1].trim();
-        var date = oneRecord[1].split(":")[1].trim();
-        var times = oneRecord[4].split(":");
-        var time = times[1].trim() + ":" + times[2] + ":" + times[3];
+    if(line == "") {
+      //handle new record
+      var id = oneRecord[0].split(":")[1].trim();
+      var date = oneRecord[1].split(":")[1].trim();
+      var times = oneRecord[4].split(":");
+      var time = times[1].trim() + ":" + times[2] + ":" + times[3];
 
-        //TODO normalize IP addresses
-        var attacker = oneRecord[6].split(":")[1].trim();
-        var victim = oneRecord[7].split(":")[1].trim();
+      var attacker = normalizeIP(oneRecord[6].split(":")[1].trim());
+      var victim = normalizeIP(oneRecord[7].split(":")[1].trim());
 
-        //TODO parse At_Victim: ports
+      //TODO parse At_Victim: ports
 
-        var truth = new Truth(id, date, time, attacker, victim);
-        print("Truth record: $truth");
-        truthRecords.add(truth);
-        
-        //reset record lines
-        oneRecord.clear();
-      } else {
-        //add line to record lines
-        oneRecord.add(line);
-      }
-    });
+      var truth = new Truth(id, date, time, attacker, victim);
+      print("Truth record: $truth");
+      truthRecords.add(truth);
+      
+      //reset record lines
+      oneRecord.clear();
+    } else {
+      //add line to record lines
+      oneRecord.add(line);
+    }
+  });
 
   print("Culling truth dates we don't care about");
   truthRecords.removeWhere((truth) => !truth.id.startsWith("43"));
@@ -47,7 +46,54 @@ void main(List<String> args) {
   print("First ${truthRecords.first}");
   print("Last ${truthRecords.last}");
 
+  List<Snort> snortRecords = new List();
+  oneRecord.clear();
 
+  lines = new File(sguilFile).readAsLinesSync();
+
+  lines.forEach( (line) {
+    if(line.startsWith("---------") && oneRecord.length > 0 ) {
+      //handle new record
+      var line1Splits = oneRecord[0].split(" ");
+      var id = line1Splits[1].trim();
+      var date = line1Splits[2].trim();
+      var time = line1Splits[3].trim();
+
+      var line2Splits = oneRecord[2].split(" -> ");
+      var attacker = line2Splits[0].trim();
+      var victim = line2Splits[1].trim();
+
+      //TODO parse destination ports
+
+      var snort = new Snort(id, date, time, attacker, victim);
+      print("Snort record: $snort");
+      snortRecords.add(snort);
+      
+      //reset record lines
+      oneRecord.clear();
+    } else if (!line.startsWith("-------")) {
+      //add line to record lines
+      oneRecord.add(line);
+    }
+
+  });
+
+  print("Snort count: ${snortRecords.length}");
+  print("First ${snortRecords.first}");
+  print("Last ${snortRecords.last}");
+
+  //for each Truth, look for match in snorts
+  List<Truth> matches = truthRecords.where((truth) {
+      print("Search for snort match for $truth");
+      return snortRecords.any((snort) =>
+        truth.attacker == snort.attacker &&
+        truth.victim == snort.victim);
+
+
+  });
+
+  var matchOutput = matches.map((m) => m.id).join(", ");
+  print("Final matches: $matchOutput");
 }
 
 class Truth {
@@ -62,3 +108,28 @@ class Truth {
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
     "Victim $victim";
 }
+
+class Snort {
+  String id;
+  String date;
+  String time;
+  String attacker;
+  String victim;
+
+  Snort(this.id, this.date, this.time, this.attacker, this.victim);
+
+  String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
+    "Victim $victim";
+
+}
+
+String normalizeIP(String input){
+  List<String> splits = input.split(".");
+  try{
+    List<Int> ints = splits.map((s) => int.parse(s));
+    return ints.join(".");
+  } catch (_) {
+    return input;
+  }
+}
+
