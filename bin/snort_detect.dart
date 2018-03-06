@@ -5,13 +5,15 @@ import 'dart:io';
 
 void main(List<String> args) {
   
-  //load file one
+  //load file names
   String truthFile = args[0];
   String sguilFile = args[1];
 
+  //empty lists of record objects
   List<Truth> truthRecords = new List();
   List<String> oneRecord = new List();
 
+  // read truth data file into a list of lines
   var lines = new File(truthFile).readAsLinesSync();
 
   lines.forEach( (line) {
@@ -27,6 +29,7 @@ void main(List<String> args) {
 
       //TODO parse At_Victim: ports
 
+      //new truth record
       var truth = new Truth(id, date, time, attacker, victim);
       print("Truth record: $truth");
       truthRecords.add(truth);
@@ -46,9 +49,11 @@ void main(List<String> args) {
   print("First ${truthRecords.first}");
   print("Last ${truthRecords.last}");
 
+  //new lists of snort records
   List<Snort> snortRecords = new List();
   oneRecord.clear();
 
+  //read snort export data file into a list of lines
   lines = new File(sguilFile).readAsLinesSync();
 
   lines.forEach( (line) {
