@@ -12,11 +12,9 @@ void main(List<String> args) {
   List<Truth> truthRecords = new List();
   List<String> oneRecord = new List();
 
-  Stream lines = new File(truthFile)
-    .openRead()
-    .transform(UTF8.decoder)
-    .transform(const LineSplitter())
-    .listen( (String line) {
+  var lines = new File(truthFile).readAsLinesSync();
+
+  lines.forEach( (line) {
       if(line == "") {
         //handle new record
         var id = oneRecord[0].split(":")[1].trim();
@@ -40,15 +38,14 @@ void main(List<String> args) {
         //add line to record lines
         oneRecord.add(line);
       }
+    });
 
-
-    },
-    onDone: () { print("Truth file is now closed."); },
-    onError: (e) { print(e.toString()); });
-
-
-  //List inputs = file.readLinSync().split(' ');
-  print ("test: $args");
+  print("Culling truth dates we don't care about");
+  truthRecords.removeWhere((truth) => !truth.id.startsWith("43"));
+  
+  print("Truth count: ${truthRecords.length}");
+  print("First ${truthRecords.first}");
+  print("Last ${truthRecords.last}");
 
 
 }
