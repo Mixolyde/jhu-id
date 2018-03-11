@@ -105,7 +105,7 @@ void main(List<String> args) {
   });
 
   var matchOutput = matches.join("\n");
-  print("Final matches: $matchOutput");
+  print("Final matches:\n$matchOutput");
 }
 
 class Truth {
