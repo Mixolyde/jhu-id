@@ -21,14 +21,19 @@ void main(List<String> args) {
       var date = oneRecord[1].split(":")[1].trim();
       var times = oneRecord[4].split(":");
       var time = times[1].trim() + ":" + times[2] + ":" + times[3];
+      var durSplits = oneRecord[5].split(":");
+      Duration duration = new Duration(
+        hours: int.parse(durSplits[1]), 
+        minutes: int.parse(durSplits[2]),
+        seconds: int.parse(durSplits[3]));
 
       var attacker = normalizeIP(oneRecord[6].split(":")[1].trim());
       var victim = normalizeIP(oneRecord[7].split(":")[1].trim());
 
       //TODO parse At_Victim: ports
 
-      var truth = new Truth(id, date, time, attacker, victim);
-      print("Truth record: $truth");
+      var truth = new Truth(id, date, time, duration, attacker, victim);
+      //print("Truth record: $truth");
       truthRecords.add(truth);
       
       //reset record lines
@@ -66,7 +71,7 @@ void main(List<String> args) {
       //TODO parse destination ports
 
       var snort = new Snort(id, date, time, attacker, victim);
-      print("Snort record: $snort");
+      //print("Snort record: $snort");
       snortRecords.add(snort);
       
       //reset record lines
@@ -94,7 +99,7 @@ void main(List<String> args) {
         );
   });
 
-  var matchOutput = matches.map((m) => m.id).join(", ");
+  var matchOutput = matches.join("\n");
   print("Final matches: $matchOutput");
 }
 
@@ -102,14 +107,16 @@ class Truth {
   String id;
   String date;
   String time;
+  Duration duration;
   String attacker;
   String victim;
   DateTime dateTime;
 
-  Truth(this.id, this.date, this.time, this.attacker, this.victim){
+  Truth(this.id, this.date, this.time, this.duration, this.attacker, this.victim){
     var dateSplits = date.split("/");
     var ISO = "${dateSplits[2]}-${dateSplits[0]}-${dateSplits[1]}";
     dateTime = DateTime.parse("$ISO $time");
+
   }
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
