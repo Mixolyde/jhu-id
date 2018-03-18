@@ -1,0 +1,449 @@
+------------------------------------------------------------------------
+Count:4 Event#2.6408 1999-03-31 18:30:34
+ET INFO PDF Using CCITTFax Filter
+134.205.165.120 -> 172.16.115.87
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=64745 flags=0 offset=0 ttl=63 chksum=11653
+Protocol: 6 sport=80 -> dport=2120
+
+Seq=948826079 Ack=3512099026 Off=5 Res=0 Flags=***A**** Win=32736 urp=6703 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5963 1999-03-31 17:58:10
+ET POLICY Inbound Frequent Emails - Possible Spambot Inbound
+135.8.60.182 -> 172.16.112.207
+IPVer=4 hlen=5 tos=0 dlen=77 ID=1197 flags=2 offset=0 ttl=63 chksum=22112
+Protocol: 6 sport=26723 -> dport=25
+
+Seq=1242560768 Ack=799980746 Off=5 Res=0 Flags=***AP*** Win=32120 urp=33371 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.4973 1999-03-31 13:29:44
+ET POLICY Inbound Frequent Emails - Possible Spambot Inbound
+135.13.216.191 -> 172.16.112.149
+IPVer=4 hlen=5 tos=0 dlen=77 ID=7853 flags=2 offset=0 ttl=63 chksum=41099
+Protocol: 6 sport=2127 -> dport=25
+
+Seq=618225938 Ack=3279340514 Off=5 Res=0 Flags=***AP*** Win=32120 urp=37018 chksum=0
+------------------------------------------------------------------------
+Count:12 Event#2.5788 1999-03-31 16:14:52
+GPL SHELLCODE x86 inc ebx NOOP
+165.254.124.9 -> 172.16.113.204
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=6184 flags=2 offset=0 ttl=63 chksum=56847
+Protocol: 6 sport=80 -> dport=8303
+
+Seq=2644870617 Ack=588774681 Off=5 Res=0 Flags=***A**** Win=32736 urp=56070 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.8052 1999-03-31 21:57:12
+GPL SHELLCODE x86 inc ebx NOOP
+166.77.12.123 -> 172.16.117.52
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=40635 flags=2 offset=0 ttl=63 chksum=50003
+Protocol: 6 sport=80 -> dport=21527
+
+Seq=389809426 Ack=3230664380 Off=5 Res=0 Flags=***A**** Win=32736 urp=31490 chksum=0
+------------------------------------------------------------------------
+Count:15 Event#2.4982 1999-03-31 13:32:16
+ET POLICY FTP Login Successful
+172.16.112.50 -> 196.37.75.158
+IPVer=4 hlen=5 tos=0 dlen=68 ID=52978 flags=2 offset=0 ttl=255 chksum=32954
+Protocol: 6 sport=21 -> dport=1029
+
+Seq=389015342 Ack=2430613659 Off=5 Res=0 Flags=***AP*** Win=8760 urp=16622 chksum=0
+------------------------------------------------------------------------
+Count:33 Event#2.5073 1999-03-31 14:07:49
+GPL TELNET Bad Login
+172.16.112.50 -> 172.16.112.194
+IPVer=4 hlen=5 tos=0 dlen=57 ID=20535 flags=2 offset=0 ttl=255 chksum=62065
+Protocol: 6 sport=23 -> dport=7954
+
+Seq=658906275 Ack=254396510 Off=5 Res=0 Flags=***AP*** Win=8760 urp=54553 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.6934 1999-03-31 19:35:51
+GPL ICMP_INFO PING BSDtype
+172.16.112.50 -> 172.16.115.87
+IPVer=4 hlen=5 tos=0 dlen=84 ID=49407 flags=2 offset=0 ttl=255 chksum=32510
+Protocol: 1 Type=8 Code=0 chksum=20666 ID=2499 seq=0
+------------------------------------------------------------------------
+Count:3 Event#2.6935 1999-03-31 19:35:51
+GPL ICMP_INFO PING *NIX
+172.16.112.50 -> 172.16.115.87
+IPVer=4 hlen=5 tos=0 dlen=84 ID=49407 flags=2 offset=0 ttl=255 chksum=32510
+Protocol: 1 Type=8 Code=0 chksum=20666 ID=2499 seq=0
+------------------------------------------------------------------------
+Count:61 Event#2.4959 1999-03-31 13:18:28
+ET POLICY FTP Login Successful
+172.16.112.100 -> 172.16.113.84
+IPVer=4 hlen=5 tos=0 dlen=71 ID=4866 flags=2 offset=0 ttl=128 chksum=44501
+Protocol: 6 sport=21 -> dport=4171
+
+Seq=2132963 Ack=316764523 Off=5 Res=0 Flags=***AP*** Win=8711 urp=60462 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.5377 1999-03-31 15:23:59
+GPL WEB_SERVER 403 Forbidden
+172.16.112.100 -> 194.27.251.21
+IPVer=4 hlen=5 tos=0 dlen=151 ID=56606 flags=2 offset=0 ttl=128 chksum=17308
+Protocol: 6 sport=80 -> dport=1665
+
+Seq=9666719 Ack=2798110664 Off=5 Res=0 Flags=***AP*** Win=8470 urp=63022 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.7220 1999-03-31 20:48:24
+GPL SHELLCODE x86 0x90 NOOP unicode
+172.16.112.100 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=1515 flags=2 offset=0 ttl=128 chksum=46201
+Protocol: 6 sport=20 -> dport=6461
+
+Seq=29330031 Ack=4229299432 Off=5 Res=0 Flags=***AP*** Win=8760 urp=849 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.7221 1999-03-31 20:48:24
+GPL SHELLCODE x86 0x90 unicode NOOP
+172.16.112.100 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=1515 flags=2 offset=0 ttl=128 chksum=46201
+Protocol: 6 sport=20 -> dport=6461
+
+Seq=29330031 Ack=4229299432 Off=5 Res=0 Flags=***AP*** Win=8760 urp=849 chksum=0
+------------------------------------------------------------------------
+Count:10 Event#2.4990 1999-03-31 13:36:48
+GPL TELNET Bad Login
+172.16.113.50 -> 172.16.114.168
+IPVer=4 hlen=5 tos=0 dlen=57 ID=2806 flags=0 offset=0 ttl=60 chksum=14286
+Protocol: 6 sport=23 -> dport=18990
+
+Seq=419328098 Ack=3240859614 Off=5 Res=0 Flags=***AP*** Win=4096 urp=62037 chksum=0
+------------------------------------------------------------------------
+Count:12 Event#2.5786 1999-03-31 16:06:50
+ET POLICY FTP Login Successful
+172.16.113.50 -> 172.16.112.50
+IPVer=4 hlen=5 tos=0 dlen=69 ID=11973 flags=0 offset=0 ttl=60 chksum=5737
+Protocol: 6 sport=21 -> dport=32878
+
+Seq=1580416078 Ack=1565169234 Off=5 Res=0 Flags=***AP*** Win=4096 urp=61624 chksum=0
+------------------------------------------------------------------------
+Count:15 Event#2.6499 1999-03-31 18:42:20
+ET SCAN Potential FTP Brute-Force attempt
+172.16.113.50 -> 208.240.124.83
+IPVer=4 hlen=5 tos=0 dlen=62 ID=21220 flags=0 offset=0 ttl=60 chksum=49487
+Protocol: 6 sport=21 -> dport=1269
+
+Seq=630208077 Ack=3244835531 Off=5 Res=0 Flags=***AP*** Win=4096 urp=8924 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.4952 1999-03-31 13:18:08
+ET CHAT IRC NICK command
+172.16.113.84 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=54 ID=6023 flags=2 offset=0 ttl=64 chksum=17434
+Protocol: 6 sport=4170 -> dport=6667
+
+Seq=3890476966 Ack=1585620599 Off=5 Res=0 Flags=***AP*** Win=32120 urp=61444 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.4953 1999-03-31 13:18:08
+ET CHAT IRC USER command
+172.16.113.84 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=95 ID=6024 flags=2 offset=0 ttl=64 chksum=17392
+Protocol: 6 sport=4170 -> dport=6667
+
+Seq=3890476980 Ack=1585620599 Off=5 Res=0 Flags=***AP*** Win=32120 urp=1922 chksum=0
+------------------------------------------------------------------------
+Count:5 Event#2.4955 1999-03-31 13:18:08
+ET CHAT IRC PONG response
+172.16.113.84 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=56 ID=6038 flags=2 offset=0 ttl=64 chksum=17417
+Protocol: 6 sport=4170 -> dport=6667
+
+Seq=3890477035 Ack=1585620616 Off=5 Res=0 Flags=***AP*** Win=32120 urp=33865 chksum=0
+------------------------------------------------------------------------
+Count:3 Event#2.4956 1999-03-31 13:18:09
+ET CHAT IRC JOIN command
+172.16.113.84 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=55 ID=6040 flags=2 offset=0 ttl=64 chksum=17416
+Protocol: 6 sport=4170 -> dport=6667
+
+Seq=3890477051 Ack=1585621388 Off=5 Res=0 Flags=***AP*** Win=31348 urp=57211 chksum=0
+------------------------------------------------------------------------
+Count:23 Event#2.4957 1999-03-31 13:18:21
+ET CHAT IRC PRIVMSG command
+172.16.113.84 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=81 ID=6049 flags=2 offset=0 ttl=64 chksum=17381
+Protocol: 6 sport=4170 -> dport=6667
+
+Seq=3890477081 Ack=1585621655 Off=5 Res=0 Flags=***AP*** Win=32120 urp=30089 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.5796 1999-03-31 16:42:22
+GPL TELNET Bad Login
+172.16.113.84 -> 195.73.151.50
+IPVer=4 hlen=5 tos=16 dlen=66 ID=13282 flags=2 offset=0 ttl=64 chksum=36579
+Protocol: 6 sport=23 -> dport=16991
+
+Seq=2879169400 Ack=240823782 Off=5 Res=0 Flags=***AP*** Win=32736 urp=1279 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6950 1999-03-31 20:24:38
+ET CHAT IRC NICK command
+172.16.113.105 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=54 ID=63503 flags=2 offset=0 ttl=64 chksum=25468
+Protocol: 6 sport=29124 -> dport=6667
+
+Seq=1672729651 Ack=1388720163 Off=5 Res=0 Flags=***AP*** Win=32120 urp=43271 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6951 1999-03-31 20:24:38
+ET CHAT IRC USER command
+172.16.113.105 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=94 ID=63504 flags=2 offset=0 ttl=64 chksum=25427
+Protocol: 6 sport=29124 -> dport=6667
+
+Seq=1672729665 Ack=1388720163 Off=5 Res=0 Flags=***AP*** Win=32120 urp=31751 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.6953 1999-03-31 20:24:38
+ET CHAT IRC PONG response
+172.16.113.105 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=57 ID=63517 flags=2 offset=0 ttl=64 chksum=25451
+Protocol: 6 sport=29124 -> dport=6667
+
+Seq=1672729719 Ack=1388720181 Off=5 Res=0 Flags=***AP*** Win=32120 urp=14915 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6954 1999-03-31 20:24:38
+ET CHAT IRC JOIN command
+172.16.113.105 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=51 ID=63518 flags=2 offset=0 ttl=64 chksum=25456
+Protocol: 6 sport=29124 -> dport=6667
+
+Seq=1672729736 Ack=1388721003 Off=5 Res=0 Flags=***AP*** Win=31298 urp=33406 chksum=0
+------------------------------------------------------------------------
+Count:8 Event#2.6955 1999-03-31 20:24:50
+ET CHAT IRC PRIVMSG command
+172.16.113.105 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=80 ID=63856 flags=2 offset=0 ttl=64 chksum=25089
+Protocol: 6 sport=29124 -> dport=6667
+
+Seq=1672729758 Ack=1388721260 Off=5 Res=0 Flags=***AP*** Win=32120 urp=49828 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.5024 1999-03-31 13:51:28
+ET CHAT IRC NICK command
+172.16.113.204 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=52 ID=36237 flags=2 offset=0 ttl=64 chksum=52637
+Protocol: 6 sport=31785 -> dport=6667
+
+Seq=1512683119 Ack=1559182873 Off=5 Res=0 Flags=***AP*** Win=32120 urp=11011 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.5025 1999-03-31 13:51:29
+ET CHAT IRC USER command
+172.16.113.204 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=88 ID=36239 flags=2 offset=0 ttl=64 chksum=52599
+Protocol: 6 sport=31785 -> dport=6667
+
+Seq=1512683131 Ack=1559182873 Off=5 Res=0 Flags=***AP*** Win=32120 urp=63220 chksum=0
+------------------------------------------------------------------------
+Count:5 Event#2.5027 1999-03-31 13:51:29
+ET CHAT IRC PONG response
+172.16.113.204 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=56 ID=36250 flags=2 offset=0 ttl=64 chksum=52620
+Protocol: 6 sport=31785 -> dport=6667
+
+Seq=1512683179 Ack=1559182890 Off=5 Res=0 Flags=***AP*** Win=32120 urp=19163 chksum=0
+------------------------------------------------------------------------
+Count:2 Event#2.5028 1999-03-31 13:51:29
+ET CHAT IRC JOIN command
+172.16.113.204 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=55 ID=36252 flags=2 offset=0 ttl=64 chksum=52619
+Protocol: 6 sport=31785 -> dport=6667
+
+Seq=1512683195 Ack=1559183686 Off=5 Res=0 Flags=***AP*** Win=31324 urp=44048 chksum=0
+------------------------------------------------------------------------
+Count:16 Event#2.5029 1999-03-31 13:51:42
+ET CHAT IRC PRIVMSG command
+172.16.113.204 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=81 ID=36258 flags=2 offset=0 ttl=64 chksum=52587
+Protocol: 6 sport=31785 -> dport=6667
+
+Seq=1512683225 Ack=1559183962 Off=5 Res=0 Flags=***AP*** Win=32120 urp=16893 chksum=0
+------------------------------------------------------------------------
+Count:5 Event#2.5082 1999-03-31 14:11:07
+GPL TELNET Bad Login
+172.16.114.50 -> 172.16.113.84
+IPVer=4 hlen=5 tos=16 dlen=66 ID=838 flags=2 offset=0 ttl=64 chksum=64440
+Protocol: 6 sport=23 -> dport=9721
+
+Seq=1779015652 Ack=1241159614 Off=5 Res=0 Flags=***AP*** Win=31744 urp=33834 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5263 1999-03-31 15:16:25
+GPL ICMP_INFO PING BSDtype
+172.16.114.50 -> 172.16.112.194
+IPVer=4 hlen=5 tos=0 dlen=84 ID=2502 flags=0 offset=0 ttl=64 chksum=13774
+Protocol: 1 Type=8 Code=0 chksum=32790 ID=45828 seq=0
+------------------------------------------------------------------------
+Count:1 Event#2.5264 1999-03-31 15:16:25
+GPL ICMP_INFO PING *NIX
+172.16.114.50 -> 172.16.112.194
+IPVer=4 hlen=5 tos=0 dlen=84 ID=2502 flags=0 offset=0 ttl=64 chksum=13774
+Protocol: 1 Type=8 Code=0 chksum=32790 ID=45828 seq=0
+------------------------------------------------------------------------
+Count:3 Event#2.6932 1999-03-31 19:25:05
+ET POLICY FTP Login Successful
+172.16.114.50 -> 172.16.112.50
+IPVer=4 hlen=5 tos=16 dlen=70 ID=28238 flags=2 offset=0 ttl=64 chksum=37326
+Protocol: 6 sport=21 -> dport=33035
+
+Seq=3050223275 Ack=3078266614 Off=5 Res=0 Flags=***AP*** Win=31744 urp=64825 chksum=0
+------------------------------------------------------------------------
+Count:33 Event#2.4962 1999-03-31 13:21:04
+ET POLICY FTP Login Successful
+172.16.114.148 -> 197.218.177.69
+IPVer=4 hlen=5 tos=16 dlen=88 ID=7714 flags=2 offset=0 ttl=64 chksum=34473
+Protocol: 6 sport=21 -> dport=1203
+
+Seq=425767673 Ack=2121321348 Off=5 Res=0 Flags=***AP*** Win=32736 urp=54009 chksum=0
+------------------------------------------------------------------------
+Count:4 Event#2.5115 1999-03-31 14:25:46
+GPL TELNET Bad Login
+172.16.114.148 -> 197.218.177.69
+IPVer=4 hlen=5 tos=16 dlen=66 ID=1850 flags=2 offset=0 ttl=64 chksum=40359
+Protocol: 6 sport=23 -> dport=5329
+
+Seq=1756185355 Ack=3614699698 Off=5 Res=0 Flags=***AP*** Win=32736 urp=44063 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6943 1999-03-31 20:18:44
+ET CHAT IRC NICK command
+172.16.114.168 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=52 ID=50699 flags=2 offset=0 ttl=64 chksum=37955
+Protocol: 6 sport=25104 -> dport=6667
+
+Seq=2254090574 Ack=3646509066 Off=5 Res=0 Flags=***AP*** Win=32120 urp=33503 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6944 1999-03-31 20:18:44
+ET CHAT IRC USER command
+172.16.114.168 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=88 ID=50701 flags=2 offset=0 ttl=64 chksum=37917
+Protocol: 6 sport=25104 -> dport=6667
+
+Seq=2254090586 Ack=3646509066 Off=5 Res=0 Flags=***AP*** Win=32120 urp=28615 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6946 1999-03-31 20:18:44
+ET CHAT IRC PONG response
+172.16.114.168 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=57 ID=50713 flags=2 offset=0 ttl=64 chksum=37936
+Protocol: 6 sport=25104 -> dport=6667
+
+Seq=2254090634 Ack=3646509084 Off=5 Res=0 Flags=***AP*** Win=32120 urp=41602 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6947 1999-03-31 20:18:44
+ET CHAT IRC JOIN command
+172.16.114.168 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=51 ID=50714 flags=2 offset=0 ttl=64 chksum=37941
+Protocol: 6 sport=25104 -> dport=6667
+
+Seq=2254090651 Ack=3646509880 Off=5 Res=0 Flags=***AP*** Win=31324 urp=60094 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.6948 1999-03-31 20:18:56
+ET CHAT IRC PRIVMSG command
+172.16.114.168 -> 192.168.1.20
+IPVer=4 hlen=5 tos=0 dlen=80 ID=51111 flags=2 offset=0 ttl=64 chksum=37515
+Protocol: 6 sport=25104 -> dport=6667
+
+Seq=2254090673 Ack=3646510114 Off=5 Res=0 Flags=***AP*** Win=32120 urp=11030 chksum=0
+------------------------------------------------------------------------
+Count:869 Event#2.5342 1999-03-31 15:23:42
+ET MALWARE User-Agent (Win95)
+172.16.116.194 -> 136.149.63.132
+IPVer=4 hlen=5 tos=0 dlen=185 ID=55237 flags=2 offset=0 ttl=64 chksum=31117
+Protocol: 6 sport=20570 -> dport=80
+
+Seq=3890396343 Ack=4043637599 Off=5 Res=0 Flags=***AP*** Win=32120 urp=1685 chksum=0
+------------------------------------------------------------------------
+Count:1778 Event#2.5165 1999-03-31 15:03:04
+ET MALWARE User-Agent (Win95)
+172.16.116.201 -> 136.149.63.132
+IPVer=4 hlen=5 tos=0 dlen=185 ID=33925 flags=2 offset=0 ttl=64 chksum=52422
+Protocol: 6 sport=9832 -> dport=80
+
+Seq=1007423477 Ack=861578915 Off=5 Res=0 Flags=***AP*** Win=32120 urp=41856 chksum=0
+------------------------------------------------------------------------
+Count:15 Event#2.4954 1999-03-31 13:18:08
+ET CHAT IRC PING command
+192.168.1.20 -> 172.16.113.84
+IPVer=4 hlen=5 tos=0 dlen=57 ID=1893 flags=2 offset=0 ttl=63 chksum=21817
+Protocol: 6 sport=6667 -> dport=4170
+
+Seq=1585620599 Ack=3890477035 Off=5 Res=0 Flags=***AP*** Win=32667 urp=30777 chksum=0
+------------------------------------------------------------------------
+Count:163 Event#2.4934 1999-03-31 13:00:28
+GPL SNMP public access udp
+192.168.1.30 -> 172.16.112.5
+IPVer=4 hlen=5 tos=0 dlen=132 ID=46163 flags=2 offset=0 ttl=254 chksum=59960
+Protocol: 17 sport=32772 -> dport=161
+
+len=112 chksum=19200
+------------------------------------------------------------------------
+Count:1 Event#2.5989 1999-03-31 18:00:27
+GPL SHELLCODE x86 NOOP
+194.7.248.153 -> 172.16.112.20
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=4590 flags=2 offset=0 ttl=62 chksum=20072
+Protocol: 6 sport=2076 -> dport=53
+
+Seq=3990260837 Ack=2049459744 Off=5 Res=0 Flags=***A**** Win=32120 urp=60716 chksum=0
+------------------------------------------------------------------------
+Count:15 Event#2.8029 1999-03-31 21:54:20
+ET POLICY Inbound Frequent Emails - Possible Spambot Inbound
+194.7.248.153 -> 172.16.112.50
+IPVer=4 hlen=5 tos=0 dlen=70 ID=1685 flags=2 offset=0 ttl=62 chksum=24377
+Protocol: 6 sport=2162 -> dport=25
+
+Seq=3525481996 Ack=4224721845 Off=5 Res=0 Flags=***AP*** Win=32120 urp=30066 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5472 1999-03-31 15:31:17
+ET POLICY Inbound Frequent Emails - Possible Spambot Inbound
+195.115.218.108 -> 172.16.112.149
+IPVer=4 hlen=5 tos=0 dlen=77 ID=9467 flags=2 offset=0 ttl=63 chksum=23594
+Protocol: 6 sport=9395 -> dport=25
+
+Seq=465443408 Ack=349214370 Off=5 Res=0 Flags=***AP*** Win=32120 urp=61216 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5919 1999-03-31 17:15:34
+ET POLICY Inbound Frequent Emails - Possible Spambot Inbound
+196.37.75.158 -> 172.16.112.149
+IPVer=4 hlen=5 tos=0 dlen=81 ID=25223 flags=2 offset=0 ttl=63 chksum=44214
+Protocol: 6 sport=20552 -> dport=25
+
+Seq=1309003266 Ack=2167668188 Off=5 Res=0 Flags=***AP*** Win=32120 urp=51743 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5787 1999-03-31 16:12:04
+ET SHELLCODE Possible Call with No Offset TCP Shellcode
+197.218.177.69 -> 172.16.113.105
+IPVer=4 hlen=5 tos=8 dlen=1500 ID=36194 flags=0 offset=0 ttl=63 chksum=21528
+Protocol: 6 sport=20 -> dport=7396
+
+Seq=3921667182 Ack=2923394537 Off=5 Res=0 Flags=***A**** Win=32120 urp=7421 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5117 1999-03-31 14:26:13
+ET INFO SUSPICIOUS SMTP EXE - EXE SMTP Attachment
+207.230.54.203 -> 172.16.112.100
+IPVer=4 hlen=5 tos=0 dlen=1500 ID=249 flags=2 offset=0 ttl=62 chksum=4861
+Protocol: 6 sport=1114 -> dport=25
+
+Seq=514814286 Ack=6195954 Off=5 Res=0 Flags=***A**** Win=32120 urp=18510 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5133 1999-03-31 14:38:10
+GPL SHELLCODE Linux shellcode
+208.254.251.132 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1336 ID=394 flags=2 offset=0 ttl=62 chksum=19312
+Protocol: 6 sport=1118 -> dport=143
+
+Seq=2190388520 Ack=154659526 Off=5 Res=0 Flags=***AP*** Win=32120 urp=32098 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5134 1999-03-31 14:38:10
+GPL SHELLCODE x86 NOOP
+208.254.251.132 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1336 ID=394 flags=2 offset=0 ttl=62 chksum=19312
+Protocol: 6 sport=1118 -> dport=143
+
+Seq=2190388520 Ack=154659526 Off=5 Res=0 Flags=***AP*** Win=32120 urp=32098 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5135 1999-03-31 14:38:10
+GPL IMAP Overflow Attempt
+208.254.251.132 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1336 ID=394 flags=2 offset=0 ttl=62 chksum=19312
+Protocol: 6 sport=1118 -> dport=143
+
+Seq=2190388520 Ack=154659526 Off=5 Res=0 Flags=***AP*** Win=32120 urp=32098 chksum=0
+------------------------------------------------------------------------
+Count:1 Event#2.5136 1999-03-31 14:38:10
+GPL IMAP login buffer overflow attempt
+208.254.251.132 -> 172.16.114.50
+IPVer=4 hlen=5 tos=0 dlen=1336 ID=394 flags=2 offset=0 ttl=62 chksum=19312
+Protocol: 6 sport=1118 -> dport=143
+
+Seq=2190388520 Ack=154659526 Off=5 Res=0 Flags=***AP*** Win=32120 urp=32098 chksum=0
+
