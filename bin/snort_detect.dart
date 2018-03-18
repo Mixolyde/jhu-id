@@ -33,9 +33,35 @@ void main(List<String> args) {
       var victim = normalizeIP(oneRecord[7].split(":")[1].trim());
 
       //TODO parse At_Victim: ports
+      List<int> ports = [];
+      String portList = oneRecord[11].split(":")[1].trim();
+      if(portList.length > 0) {
+          print("Portlist for parsing: $portList");
+          List<String> portSplits = portList.split(", ");
+          portSplits.forEach((split) {
+              String s = split.substring(0, split.indexOf("{"));
+              if(s.contains("/")) {
+                  s = s.substring(0, s.indexOf("/"));
+              }
+    
+              if(s != "i"){
+                 if(s.contains("-")){
+                     int begin = int.parse(s.substring(0, s.indexOf("-")));
+                     int end = int.parse(s.substring(s.indexOf("-") + 1));
+                     for(int index = begin; index <= end; index++){
+                         ports.add(index);
+                     }
+                 } else {
+                     print("Parsing $s");
+                     ports.add(int.parse(s));
+                 }
+              }
+          });
+      }
 
       //new truth record
-      var truth = new Truth(id, date, time, duration, attacker, victim);
+      var truth = new Truth(id, date, time, duration, 
+          attacker, victim, ports);
       //print("Truth record: $truth");
       truthRecords.add(truth);
       
@@ -116,8 +142,10 @@ class Truth {
   String attacker;
   String victim;
   DateTime dateTime;
+  List<int> ports;
 
-  Truth(this.id, this.date, this.time, this.duration, this.attacker, this.victim){
+  Truth(this.id, this.date, this.time, this.duration, 
+      this.attacker, this.victim, this.ports){
     var dateSplits = date.split("/");
     var ISO = "${dateSplits[2]}-${dateSplits[0]}-${dateSplits[1]}";
     dateTime = DateTime.parse("$ISO $time");
