@@ -21,7 +21,7 @@ void main(List<String> args) {
     if(lineCount > 0 && line.startsWith("ID") ) {
       //handle new record in previous lines
       var id = oneRecord[0].split(":")[1].trim();
-      print("ID: $id");
+      //print("ID: $id");
       var date = oneRecord[1].split(":")[1].trim();
       var times = oneRecord[4].split(":");
       var time = times[1].trim() + ":" + times[2] + ":" + times[3];
@@ -37,7 +37,7 @@ void main(List<String> args) {
       List<int> ports = [];
       String portList = oneRecord.firstWhere((s) => s.startsWith("At_Victim")).split(":")[1].trim();
       if(portList.length > 0) {
-          print("Portlist for parsing: $portList");
+          //print("Portlist for parsing: $portList");
           List<String> portSplits = portList.split(", ");
           portSplits.forEach((split) {
               String s = split.substring(0, split.indexOf("{"));
@@ -53,7 +53,7 @@ void main(List<String> args) {
                          ports.add(index);
                      }
                  } else {
-                     print("Parsing $s");
+                     //print("Parsing $s");
                      ports.add(int.parse(s));
                  }
               }
@@ -89,7 +89,7 @@ void main(List<String> args) {
 
   //read snort export data file into a list of lines
   lines = new File(sguilFile).readAsLinesSync();
-
+  RegExp exp = new RegExp(r"[0-9]+");
   lines.forEach( (line) {
     if(line.startsWith("---------") && oneRecord.length > 0 ) {
       //handle new record
@@ -102,9 +102,12 @@ void main(List<String> args) {
       var attacker = line2Splits[0].trim();
       var victim = line2Splits[1].trim();
 
-      //TODO parse destination ports
+      //print("Line: ${oneRecord[4]}");
+      var ints = exp.allMatches(oneRecord[4])
+        .map((match) => int.parse(match[0])).toList();
+      var port = ints[2];
 
-      var snort = new Snort(id, date, time, attacker, victim);
+      var snort = new Snort(id, date, time, attacker, victim, port);
       //print("Snort record: $snort");
       snortRecords.add(snort);
       
@@ -129,7 +132,8 @@ void main(List<String> args) {
         truth.attacker == snort.attacker &&
         truth.victim == snort.victim &&
         snort.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
-        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds
+        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds &&
+        truth.ports.contains(snort.port)
         );
   });
 
@@ -166,14 +170,16 @@ class Snort {
   String attacker;
   String victim;
   DateTime dateTime;
+  int port;
 
-  Snort(this.id, this.date, this.time, this.attacker, this.victim){
+  Snort(this.id, this.date, this.time,
+      this.attacker, this.victim, this.port){
     dateTime = DateTime.parse("$date $time");
   }
 
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
-    "Victim $victim";
+    "Victim $victim, Port $port";
 
 }
 
