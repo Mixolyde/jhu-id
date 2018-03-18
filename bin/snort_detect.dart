@@ -14,12 +14,14 @@ void main(List<String> args) {
   List<String> oneRecord = new List();
 
   // read truth data file into a list of lines
-  var lines = new File(truthFile).readAsLinesSync();
+  var lines = new File(truthFile).readAsLinesSync().map((line) => line.trim());
+  int lineCount = 0;
 
   lines.forEach( (line) {
-    if(line == "") {
-      //handle new record
+    if(lineCount > 0 && line.startsWith("ID") ) {
+      //handle new record in previous lines
       var id = oneRecord[0].split(":")[1].trim();
+      print("ID: $id");
       var date = oneRecord[1].split(":")[1].trim();
       var times = oneRecord[4].split(":");
       var time = times[1].trim() + ":" + times[2] + ":" + times[3];
@@ -32,9 +34,8 @@ void main(List<String> args) {
       var attacker = normalizeIP(oneRecord[6].split(":")[1].trim());
       var victim = normalizeIP(oneRecord[7].split(":")[1].trim());
 
-      //TODO parse At_Victim: ports
       List<int> ports = [];
-      String portList = oneRecord[11].split(":")[1].trim();
+      String portList = oneRecord.firstWhere((s) => s.startsWith("At_Victim")).split(":")[1].trim();
       if(portList.length > 0) {
           print("Portlist for parsing: $portList");
           List<String> portSplits = portList.split(", ");
@@ -67,9 +68,11 @@ void main(List<String> args) {
       
       //reset record lines
       oneRecord.clear();
+      oneRecord.add(line);
     } else {
       //add line to record lines
       oneRecord.add(line);
+      lineCount++;
     }
   });
 
@@ -153,7 +156,7 @@ class Truth {
   }
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
-    "Victim $victim";
+    "Victim $victim Ports: $ports";
 }
 
 class Snort {
