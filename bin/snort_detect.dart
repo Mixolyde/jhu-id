@@ -3,6 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 
+Map<String, int> portMap = {
+  "ftp-data": 20,
+  "ftp": 21,
+  "ssh": 22,
+  "telnet": 23,
+  "smtp": 25,
+  "route": 38,
+  "domain": 53,
+  "http": 80,
+  "ntp": 123,
+  "netbios-ns": 137,
+  "imap4": 143
+
+};
+
 void main(List<String> args) {
   
   //load file names
@@ -137,15 +152,18 @@ void main(List<String> args) {
       if(listOfValues[3].contains(":"))
         return;
 
+      int srcPort = listOfValues[4] is int ? listOfValues[4] : parseNetflowPort(listOfValues[4]);
+      int destPort = listOfValues[7] is int ? listOfValues[7] : parseNetflowPort(listOfValues[7]);
+
       netflowRecords.add(new Netflow(
         listOfValues[0],
         listOfValues[1],
         listOfValues[2],
         listOfValues[3],
-        listOfValues[4],
+        srcPort,
         listOfValues[5],
         listOfValues[6],
-        listOfValues[7],
+        destPort,
         listOfValues[8],
         listOfValues[9],
         listOfValues[10]));
@@ -163,13 +181,31 @@ void main(List<String> args) {
         truth.attacker == snort.attacker &&
         truth.victim == snort.victim &&
         snort.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
-        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds &&
+        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds +
+          truth.duration.inSeconds &&
         truth.ports.contains(snort.port)
         );
-  });
+  }).toList();
 
   var matchOutput = matches.join("\n");
+  print("True Positives matched: ${matches.length}");
+  print("False Positives: ${snortRecords.length - matches.length}");
   print("Final matches:\n$matchOutput");
+
+  matches.forEach((match) {
+      //find packet count
+      var netflows = netflowRecords.where((netflow) =>
+        match.attacker == netflow.srcAddress &&
+        match.victim == netflow.destAddress &&
+        match.ports.contains(netflow.destPort)
+        match.dateTime.difference(netflow.startTime).inSeconds > minSeconds 
+        match.dateTime.difference(netflow.startTime).inSeconds < maxSeconds + match.duration.inSeconds
+        )
+      .toList();
+      int packets = netflows.fold(0, (a, b) => a + b.packets);
+      print("Netflows Count: (${netflows.length}) Packets: $packets");
+  });
+
 }
 
 class Truth {
@@ -191,7 +227,7 @@ class Truth {
   }
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
-    "Victim $victim Ports: $ports";
+    "Victim $victim Duration $duration Ports: $ports";
 }
 
 class Snort {
@@ -247,3 +283,13 @@ String normalizeIP(String input){
   }
 }
 
+int parseNetflowPort(String netPort){
+  if(netPort.length == 0){
+    return null;
+  } else if(portMap.keys.contains(netPort)){
+    return portMap[netPort];
+  } else {
+    //print("Could not parse $netPort");
+    return null;
+  }
+}
