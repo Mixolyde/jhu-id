@@ -8,6 +8,7 @@ void main(List<String> args) {
   //load file names
   String truthFile = args[0];
   String sguilFile = args[1];
+  String argus = args[2];
 
   //empty lists of record objects
   List<Truth> truthRecords = new List();

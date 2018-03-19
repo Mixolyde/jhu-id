@@ -1,0 +1,4 @@
+name: detect_snort
+
+dependencies:
+  csv: ^3.1.2
