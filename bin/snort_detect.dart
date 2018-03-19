@@ -1,14 +1,14 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:csv/csv.dart';
 
 void main(List<String> args) {
   
   //load file names
   String truthFile = args[0];
   String sguilFile = args[1];
-  String argus = args[2];
+  String argusFile = args[2];
 
   //empty lists of record objects
   List<Truth> truthRecords = new List();
@@ -125,6 +125,36 @@ void main(List<String> args) {
   print("First ${snortRecords.first}");
   print("Last ${snortRecords.last}");
 
+  //load argus netflow csv
+  List<Netflow> netflowRecords = new List();
+  lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
+  var rowsAsListOfValues = const CsvToListConverter().convert(lines);
+  rowsAsListOfValues.forEach((listOfValues) {
+      //print("List length: ${listOfValues.length}");
+      assert(listofValues.length == 11);
+      //print(listOfValues);
+      //ignore mac address records
+      if(listOfValues[3].contains(":"))
+        return;
+
+      netflowRecords.add(new Netflow(
+        listOfValues[0],
+        listOfValues[1],
+        listOfValues[2],
+        listOfValues[3],
+        listOfValues[4],
+        listOfValues[5],
+        listOfValues[6],
+        listOfValues[7],
+        listOfValues[8],
+        listOfValues[9],
+        listOfValues[10]));
+  });
+
+  print("Netflow count: ${netflowRecords.length}");
+  print("First ${netflowRecords.first}");
+  print("Last ${netflowRecords.last}");
+
   int minSeconds = 5 * 60 * 60 - 10;
   int maxSeconds = 5 * 60 * 60 + 10;
   //for each Truth, look for match in snorts
@@ -181,6 +211,29 @@ class Snort {
 
   String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
     "Victim $victim, Port $port";
+
+}
+
+class Netflow {
+  DateTime startTime;
+  String flags;
+  String proto;
+  String srcAddress;
+  int srcPort;
+  String dir;
+  String destAddress;
+  int destPort;
+  int packets;
+  int bytes;
+  String state;
+
+  Netflow(String startTime, this.flags, this.proto, this.srcAddress,
+      this.srcPort, this.dir, this.destAddress, this.destPort,
+      this.packets, this.bytes, this.state){
+    this.startTime = DateTime.parse("1999-03-31 $startTime");
+  }
+
+  String toString() => "$startTime $srcAddress:$srcPort $destAddress:$destPort $packets";
 
 }
 
