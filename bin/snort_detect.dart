@@ -173,18 +173,23 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
-  int minSeconds = 5 * 60 * 60 - 10;
-  int maxSeconds = 5 * 60 * 60 + 10;
+  //adjust for 5 hour difference
+  // ground starts at 8:00, snort/argus at 13:00
+  int minSeconds = 5 * 60 * 60 - 60;
+  int maxSeconds = 5 * 60 * 60 + 60;
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
-      return snortRecords.any((snort) =>
-        truth.attacker == snort.attacker &&
-        truth.victim == snort.victim &&
-        snort.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
-        snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds +
-          truth.duration.inSeconds &&
-        truth.ports.contains(snort.port)
-        );
+      //print("Match Truth: ${truth.id} ${truth.dateTime}");
+      return snortRecords.any((snort) {
+        
+        return 
+          truth.attacker == snort.attacker &&
+          truth.victim == snort.victim &&
+          snort.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
+          snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds +
+            truth.duration.inSeconds &&
+          truth.ports.contains(snort.port);
+        });
   }).toList();
 
   var matchOutput = matches.join("\n");
@@ -197,8 +202,8 @@ void main(List<String> args) {
       var netflows = netflowRecords.where((netflow) =>
         match.attacker == netflow.srcAddress &&
         match.victim == netflow.destAddress &&
-        match.ports.contains(netflow.destPort)
-        match.dateTime.difference(netflow.startTime).inSeconds > minSeconds 
+        match.ports.contains(netflow.destPort) &&
+        match.dateTime.difference(netflow.startTime).inSeconds > minSeconds &&
         match.dateTime.difference(netflow.startTime).inSeconds < maxSeconds + match.duration.inSeconds
         )
       .toList();
@@ -226,8 +231,8 @@ class Truth {
 
   }
 
-  String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
-    "Victim $victim Duration $duration Ports: $ports";
+  String toString() => "ID:$id Date:$date Time:$time Attac:$attacker " +
+    "Vic:$victim Dur:$duration Ports:$ports";
 }
 
 class Snort {
@@ -245,8 +250,8 @@ class Snort {
   }
 
 
-  String toString() => "ID: $id, Date $date, Time $time, Attacker $attacker, " +
-    "Victim $victim, Port $port";
+  String toString() => "ID:$id Date:$date Time:$time Attack:$attacker " +
+    "Vic:$victim Port:$port";
 
 }
 
