@@ -3,21 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 
-Map<String, int> portMap = {
-  "ftp-data": 20,
-  "ftp": 21,
-  "ssh": 22,
-  "telnet": 23,
-  "smtp": 25,
-  "route": 38,
-  "domain": 53,
-  "http": 80,
-  "ntp": 123,
-  "netbios-ns": 137,
-  "imap4": 143
-
-};
-
 void main(List<String> args) {
   
   //load file names
@@ -51,35 +36,49 @@ void main(List<String> args) {
       var victim = normalizeIP(oneRecord[7].split(":")[1].trim());
 
       List<int> ports = [];
-      String portList = oneRecord.firstWhere((s) => s.startsWith("At_Victim")).split(":")[1].trim();
-      if(portList.length > 0) {
-          //print("Portlist for parsing: $portList");
-          List<String> portSplits = portList.split(", ");
-          portSplits.forEach((split) {
-              String s = split.substring(0, split.indexOf("{"));
-              if(s.contains("/")) {
-                  s = s.substring(0, s.indexOf("/"));
-              }
-    
-              if(s != "i"){
-                 if(s.contains("-")){
-                     int begin = int.parse(s.substring(0, s.indexOf("-")));
-                     int end = int.parse(s.substring(s.indexOf("-") + 1));
-                     for(int index = begin; index <= end; index++){
-                         ports.add(index);
-                     }
-                 } else {
-                     //print("Parsing $s");
-                     ports.add(int.parse(s));
-                 }
-              }
-          });
+      //locate at_victim line and scan it and following lines for ports
+      int portIndex = 0;
+      while(!oneRecord[portIndex].contains("At_Victim")){
+        portIndex++;
+      }
+      //print("Found At_Victim ports at $portIndex");
+      while(oneRecord[portIndex].length != 0){
+        String portList;
+        if(oneRecord[portIndex].startsWith("At_Victim")){
+          portList = oneRecord[portIndex].split(":")[1].trim();
+        } else {
+          portList = oneRecord[portIndex];
+        }
+        if(portList.length > 0) {
+            //print("Portlist for parsing: $portList");
+            List<String> portSplits = portList.split(", ");
+            portSplits.forEach((split) {
+                String s = split.substring(0, split.indexOf("{"));
+                if(s.contains("/")) {
+                    s = s.substring(0, s.indexOf("/"));
+                }
+      
+                if(s != "i"){
+                   if(s.contains("-")){
+                       int begin = int.parse(s.substring(0, s.indexOf("-")));
+                       int end = int.parse(s.substring(s.indexOf("-") + 1));
+                       for(int index = begin; index <= end; index++){
+                           ports.add(index);
+                       }
+                   } else {
+                       //print("Parsing $s");
+                       ports.add(int.parse(s));
+                   }
+                }
+            });
+        }
+
+        portIndex++;
       }
 
       //new truth record
       var truth = new Truth(id, date, time, duration, 
           attacker, victim, ports);
-      //print("Truth record: $truth");
       truthRecords.add(truth);
       
       //reset record lines
@@ -94,7 +93,7 @@ void main(List<String> args) {
 
   print("Culling truth dates we don't care about");
   truthRecords.removeWhere((truth) => !truth.id.startsWith("43"));
-  
+
   print("Truth count: ${truthRecords.length}");
   print("First ${truthRecords.first}");
   print("Last ${truthRecords.last}");
@@ -142,6 +141,7 @@ void main(List<String> args) {
 
   //load argus netflow csv
   List<Netflow> netflowRecords = new List();
+  //skip header row
   lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
   var rowsAsListOfValues = const CsvToListConverter().convert(lines);
   rowsAsListOfValues.forEach((listOfValues) {
@@ -202,13 +202,17 @@ void main(List<String> args) {
       var netflows = netflowRecords.where((netflow) =>
         match.attacker == netflow.srcAddress &&
         match.victim == netflow.destAddress &&
-        match.ports.contains(netflow.destPort) &&
-        match.dateTime.difference(netflow.startTime).inSeconds > minSeconds &&
-        match.dateTime.difference(netflow.startTime).inSeconds < maxSeconds + match.duration.inSeconds
+        match.ports.contains(netflow.destPort)
+        &&
+        netflow.startTime.difference(match.dateTime).inSeconds > minSeconds - match.duration.inSeconds 
+        &&
+        netflow.startTime.difference(match.dateTime).inSeconds < maxSeconds + match.duration.inSeconds
         )
       .toList();
       int packets = netflows.fold(0, (a, b) => a + b.packets);
       print("Netflows Count: (${netflows.length}) Packets: $packets");
+      var times = netflows.map((n) => "${n.startTime} ${n.startTime.difference(match.dateTime).inSeconds}").join("\n");
+      print(times);
   });
 
 }
@@ -291,10 +295,7 @@ String normalizeIP(String input){
 int parseNetflowPort(String netPort){
   if(netPort.length == 0){
     return null;
-  } else if(portMap.keys.contains(netPort)){
-    return portMap[netPort];
   } else {
-    //print("Could not parse $netPort");
-    return null;
+    return int.parse(netPort);
   }
 }
