@@ -174,7 +174,9 @@ void main(List<String> args) {
         listOfValues[10]));
   });
 
-  print("Netflow count: ${netflowRecords.length}");
+  int totalNetflowPackets = netflowRecords.fold(0, (sum, n) => sum + n.packets);
+
+  print("Netflow count: ${netflowRecords.length} packets: $totalNetflowPackets");
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
@@ -213,24 +215,43 @@ void main(List<String> args) {
       totalMatchingPackets += packets;
   });
 
-  //confusion matrix
-  // TN  FP
-  // FN  TP
+  print("Final matching packets: $totalMatchingPackets");
   print("Count packets into TP, FP, TN, FN");
-  int TN = 0;
-  int FN = 0;
-  int TP = 0;
-  int FP = 0;
+  int tn = 0;
+  int fn = 0;
+  int tp = 0;
+  int fp = 0;
 
   netflowRecords
-    .take(10)
+    //.take(1000) // testing sample
     .forEach((n) {
         bool matchesTruth = truthRecords.any((t) => n.matchesTruth(t));
         bool matchesSnort = snortRecords.any((s) => n.matchesSnort(s));
-        print("$n Matches T/S: $matchesTruth $matchesSnort");
+        bool matchesBoth = truthRecords.any((t) => n.matchesTruth(t) && t.matches.length > 0);
+        //print("$n Matches T/S/B: $matchesTruth $matchesSnort $matchesBoth");
+        if(matchesBoth){
+          tp += n.packets;
+        } else if (matchesTruth) {
+          //matched truth record, but not snort alert, so false negative
+          fn += n.packets;
+        } else if (matchesSnort) {
+          //matched a snort record, but not a truth, so false positive
+          fp += n.packets;
+        } else {
+          //no match is normal traffic
+          tn += n.packets;
+        }
     });
-  
 
+  //verify
+
+  assert(tp + fp + fn + tn == totalNetflowPackets);
+  assert(tp == totalMatchingPackets);
+  print("Confusion Matrix:");
+  print("TP|FP");
+  print("FN|TN");
+  print("$tp|$fp");
+  print("$fn|$tn");
 }
 
 class Truth {
@@ -253,7 +274,7 @@ class Truth {
 
   }
 
-  String toString() => "ID:$id Date:$date Time:$time Attac:$attacker " +
+  String toString() => "ID:$id Date:$date Time:$time Att:$attacker " +
     "Vic:$victim Dur:$duration Ports:$ports";
 }
 
@@ -272,7 +293,7 @@ class Snort {
   }
 
 
-  String toString() => "ID:$id Date:$date Time:$time Attack:$attacker " +
+  String toString() => "ID:$id Date:$date Time:$time Att:$attacker " +
     "Vic:$victim Port:$port";
 
 }
@@ -296,7 +317,7 @@ class Netflow {
     this.startTime = DateTime.parse("1999-03-31 $startTime");
   }
 
-  String toString() => "$startTime $srcAddress:$srcPort $destAddress:$destPort $packets";
+  String toString() => "${startTime.toString().substring(11)} $srcAddress:$srcPort $destAddress:$destPort $packets";
 
   bool matchesTruth(Truth truth){
     return
