@@ -1,14 +1,16 @@
-import 'dart:collection';
-import 'dart:convert';
+//import 'dart:collection';
+//import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 
 //adjust for 5 hour difference
 // ground starts at 8:00, snort/argus at 13:00
-int minSeconds = 5 * 60 * 60 - 60;
-int maxSeconds = 5 * 60 * 60 + 60;
+int minSeconds = 5 * 60 * 60 - 600;
+int maxSeconds = 5 * 60 * 60 + 600;
 
 void main(List<String> args) {
+  print("minSeconds $minSeconds");
+  print("maxSeconds $maxSeconds");
   //load file names
   String truthFile = args[0];
   String sguilFile = args[1];
@@ -149,9 +151,6 @@ void main(List<String> args) {
   lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
   var rowsAsListOfValues = const CsvToListConverter().convert(lines);
   rowsAsListOfValues.forEach((listOfValues) {
-    //print("List length: ${listOfValues.length}");
-    assert(listofValues.length == 11);
-    //print(listOfValues);
     //ignore mac address records
     if (listOfValues[3].contains(":")) return;
 
@@ -212,8 +211,6 @@ void main(List<String> args) {
         netflowRecords.where((netflow) => netflow.matchesTruth(match)).toList();
     int packets = netflows.fold(0, (a, b) => a + b.packets);
     print("Netflows Count: (${netflows.length}) Packets: $packets");
-    //var times = netflows.map((n) => "${n.startTime} ${n.startTime.difference(match.dateTime).inSeconds}").join("\n");
-    //print(times);
     totalMatchingPackets += packets;
   });
 
@@ -248,11 +245,11 @@ void main(List<String> args) {
 
   //verify
 
-  assert(tp + fp + fn + tn == totalNetflowPackets);
-  assert(tp == totalMatchingPackets);
-  print("Confusion Matrix:");
-  print("TP|FP");
-  print("FN|TN");
+  print("${tp + fp + fn + tn} == $totalNetflowPackets");
+  print("$tp == $totalMatchingPackets");
+  print("Confusion Matrix Packet Counts:");
+  print("True Positives|False Positives");
+  print("False Negatives|True Negatives");
   print("$tp|$fp");
   print("$fn|$tn");
 }
@@ -277,7 +274,7 @@ class Truth {
   }
 
   String toString() =>
-      "ID:$id Date:$date Time:$time Att:$attacker " +
+      "ID:$id DateTime:$dateTime Att:$attacker " +
       "Vic:$victim Dur:$duration Ports:$ports";
 }
 
@@ -295,7 +292,7 @@ class Snort {
   }
 
   String toString() =>
-      "ID:$id Date:$date Time:$time Att:$attacker " + "Vic:$victim Port:$port";
+      "ID:$id DateTime:$dateTime Att:$attacker Vic:$victim Port:$port";
 }
 
 class Netflow {
@@ -343,15 +340,15 @@ class Netflow {
     return snort.attacker == srcAddress &&
         snort.victim == destAddress &&
         snort.port == destPort &&
-        startTime.difference(snort.dateTime).inSeconds > minSeconds &&
-        startTime.difference(snort.dateTime).inSeconds < maxSeconds;
+        startTime.difference(snort.dateTime).inSeconds > -60 &&
+        startTime.difference(snort.dateTime).inSeconds < 60;
   }
 }
 
 String normalizeIP(String input) {
   List<String> splits = input.split(".");
   try {
-    List<Int> ints = splits.map((s) => int.parse(s));
+    List<int> ints = splits.map((s) => int.parse(s));
     return ints.join(".");
   } catch (_) {
     return input;
