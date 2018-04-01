@@ -3,6 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 
+//adjust for 5 hour difference
+// ground starts at 8:00, snort/argus at 13:00
+int minSeconds = 5 * 60 * 60 - 60;
+int maxSeconds = 5 * 60 * 60 + 60;
+
 void main(List<String> args) {
   
   //load file names
@@ -96,7 +101,7 @@ void main(List<String> args) {
 
   print("Truth count: ${truthRecords.length}");
   print("First ${truthRecords.first}");
-  print("Last ${truthRecords.last}");
+  print("Last  ${truthRecords.last}");
 
   //new lists of snort records
   List<Snort> snortRecords = new List();
@@ -137,7 +142,7 @@ void main(List<String> args) {
 
   print("Snort count: ${snortRecords.length}");
   print("First ${snortRecords.first}");
-  print("Last ${snortRecords.last}");
+  print("Last  ${snortRecords.last}");
 
   //load argus netflow csv
   List<Netflow> netflowRecords = new List();
@@ -173,15 +178,10 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
-  //adjust for 5 hour difference
-  // ground starts at 8:00, snort/argus at 13:00
-  int minSeconds = 5 * 60 * 60 - 60;
-  int maxSeconds = 5 * 60 * 60 + 60;
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
       //print("Match Truth: ${truth.id} ${truth.dateTime}");
-      return snortRecords.any((snort) {
-        
+      var snortMatches = snortRecords.where((snort) {
         return 
           truth.attacker == snort.attacker &&
           truth.victim == snort.victim &&
@@ -189,7 +189,10 @@ void main(List<String> args) {
           snort.dateTime.difference(truth.dateTime).inSeconds < maxSeconds +
             truth.duration.inSeconds &&
           truth.ports.contains(snort.port);
-        });
+        }).toList();
+      truth.matches = snortMatches;
+
+      return snortMatches.length > 0;
   }).toList();
 
   var matchOutput = matches.join("\n");
@@ -197,23 +200,36 @@ void main(List<String> args) {
   print("False Positives: ${snortRecords.length - matches.length}");
   print("Final matches:\n$matchOutput");
 
+  int totalMatchingPackets = 0;
+
   matches.forEach((match) {
       //find packet count
-      var netflows = netflowRecords.where((netflow) =>
-        match.attacker == netflow.srcAddress &&
-        match.victim == netflow.destAddress &&
-        match.ports.contains(netflow.destPort)
-        &&
-        netflow.startTime.difference(match.dateTime).inSeconds > minSeconds - match.duration.inSeconds 
-        &&
-        netflow.startTime.difference(match.dateTime).inSeconds < maxSeconds + match.duration.inSeconds
-        )
-      .toList();
+      var netflows = netflowRecords.where((netflow) => netflow.matchesTruth(match))
+        .toList();
       int packets = netflows.fold(0, (a, b) => a + b.packets);
       print("Netflows Count: (${netflows.length}) Packets: $packets");
-      var times = netflows.map((n) => "${n.startTime} ${n.startTime.difference(match.dateTime).inSeconds}").join("\n");
-      print(times);
+      //var times = netflows.map((n) => "${n.startTime} ${n.startTime.difference(match.dateTime).inSeconds}").join("\n");
+      //print(times);
+      totalMatchingPackets += packets;
   });
+
+  //confusion matrix
+  // TN  FP
+  // FN  TP
+  print("Count packets into TP, FP, TN, FN");
+  int TN = 0;
+  int FN = 0;
+  int TP = 0;
+  int FP = 0;
+
+  netflowRecords
+    .take(10)
+    .forEach((n) {
+        bool matchesTruth = truthRecords.any((t) => n.matchesTruth(t));
+        bool matchesSnort = snortRecords.any((s) => n.matchesSnort(s));
+        print("$n Matches T/S: $matchesTruth $matchesSnort");
+    });
+  
 
 }
 
@@ -226,6 +242,8 @@ class Truth {
   String victim;
   DateTime dateTime;
   List<int> ports;
+
+  List<Snort> matches = [];
 
   Truth(this.id, this.date, this.time, this.duration, 
       this.attacker, this.victim, this.ports){
@@ -279,6 +297,30 @@ class Netflow {
   }
 
   String toString() => "$startTime $srcAddress:$srcPort $destAddress:$destPort $packets";
+
+  bool matchesTruth(Truth truth){
+    return
+      truth.attacker == srcAddress &&
+      truth.victim == destAddress &&
+      truth.ports.contains(destPort)
+      &&
+      startTime.difference(truth.dateTime).inSeconds > minSeconds - truth.duration.inSeconds 
+      &&
+      startTime.difference(truth.dateTime).inSeconds < maxSeconds + truth.duration.inSeconds
+      ;
+  }
+
+  bool matchesSnort(Snort snort){
+    return
+      snort.attacker == srcAddress &&
+      snort.victim == destAddress &&
+      snort.port == destPort
+      &&
+      startTime.difference(snort.dateTime).inSeconds > minSeconds
+      &&
+      startTime.difference(snort.dateTime).inSeconds < maxSeconds
+      ;
+  }
 
 }
 
