@@ -1,5 +1,4 @@
-//import 'dart:collection';
-//import 'dart:convert';
+import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
 
@@ -146,7 +145,7 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
-  snortMatrix();
+  suricataMatrix();
 
 }
 
@@ -264,8 +263,21 @@ suricataMatrix(){
 
   //read suricata export data file into a list of lines
   lines = new File(suriFile).readAsLinesSync();
-
   print("First Suri Line: ${lines.first.toString()}");
+
+  List<List> parsedList = lines.map((l) => JSON.decode(l)).toList();
+  print("First parsed Suri Line: ${parsedList[0]["src_ip"].toString()}");
+  parsedList.forEach((parsedMap) {
+    String id = parsedMap["pcap_cnt"];
+    DateTime dateTime = DateTime.parse(parsedMap["timestamp"]);
+    String attacker = parsedMap["src_ip"];
+    String victim = parsedMap["dest_ip"];
+    String port = parsedMap["dest_port"];
+    
+    var suri = new Suricata(id, dateTime, attacker, victim, port);
+    suriRecords.add(suri);
+
+  });
 
   print("Suri count: ${suriRecords.length}");
   print("First ${suriRecords.first}");
@@ -274,7 +286,7 @@ suricataMatrix(){
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
     //print("Match Truth: ${truth.id} ${truth.dateTime}");
-    var suriMatches = suriRecords.where((snort) {
+    var suriMatches = suriRecords.where((suri) {
       return truth.attacker == suri.attacker &&
           truth.victim == suri.victim &&
           suri.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
@@ -289,7 +301,7 @@ suricataMatrix(){
 
   var matchOutput = matches.join("\n");
   print("True Positives matched: ${matches.length}");
-  print("False Positives: ${snortRecords.length - matches.length}");
+  print("False Positives: ${suriRecords.length - matches.length}");
   print("Final matches:\n$matchOutput");
 
   int totalMatchingPackets = 0;
@@ -299,7 +311,7 @@ suricataMatrix(){
     var netflows =
         netflowRecords.where((netflow) => netflow.matchesTruth(match)).toList();
     int packets = netflows.fold(0, (a, b) => a + b.packets);
-    print("Netflows Count: (${netflows.length}) Packets: $packets");
+    //print("Netflows Count: (${netflows.length}) Packets: $packets");
     totalMatchingPackets += packets;
   });
 
@@ -314,17 +326,17 @@ suricataMatrix(){
       //.take(1000) // testing sample
       .forEach((n) {
     bool matchesTruth = truthRecords.any((t) => n.matchesTruth(t));
-    bool matchesSnort = snortRecords.any((s) => n.matchesSnort(s));
+    bool matchesSuri = suriRecords.any((s) => n.matchesSuri(s));
     bool matchesBoth =
         truthRecords.any((t) => n.matchesTruth(t) && t.matches.length > 0);
-    //print("$n Matches T/S/B: $matchesTruth $matchesSnort $matchesBoth");
+    //print("$n Matches T/S/B: $matchesTruth $matchesSuri $matchesBoth");
     if (matchesBoth) {
       tp += n.packets;
     } else if (matchesTruth) {
       //matched truth record, but not snort alert, so false negative
       fn += n.packets;
-    } else if (matchesSnort) {
-      //matched a snort record, but not a truth, so false positive
+    } else if (matchesSuri) {
+      //matched a suri record, but not a truth, so false positive
       fp += n.packets;
     } else {
       //no match is normal traffic
@@ -338,8 +350,8 @@ suricataMatrix(){
 
 printMatrix(int tp, int fp, int fn, int tn, int totalMatchingPackets){
   //verify
-  print("${tp + fp + fn + tn} == $totalNetflowPackets");
-  print("$tp == $totalMatchingPackets");
+  //print("${tp + fp + fn + tn} == $totalNetflowPackets");
+  //print("$tp == $totalMatchingPackets");
   print("Confusion Matrix Packet Counts:");
   print("True Positives|False Positives");
   print("False Negatives|True Negatives");
@@ -374,15 +386,12 @@ class Truth {
 
 class Suricata {
   String id;
-  String date;
-  String time;
   String attacker;
   String victim;
   DateTime dateTime;
   int port;
 
-  Suricata(this.id, this.date, this.time, this.attacker, this.victim, this.port) {
-    dateTime = DateTime.parse("$date $time");
+  Suricata(this.id, this.dateTime, this.attacker, this.victim, this.port) {
   }
 
   String toString() =>
@@ -453,6 +462,14 @@ class Netflow {
         snort.port == destPort &&
         startTime.difference(snort.dateTime).inSeconds > -60 &&
         startTime.difference(snort.dateTime).inSeconds < 60;
+  }
+
+  bool matchesSuri(Suricata suri) {
+    return suri.attacker == srcAddress &&
+        suri.victim == destAddress &&
+        suri.port == destPort &&
+        startTime.difference(suri.dateTime).inSeconds > -60 &&
+        startTime.difference(suri.dateTime).inSeconds < 60;
   }
 }
 
