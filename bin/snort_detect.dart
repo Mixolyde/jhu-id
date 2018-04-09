@@ -7,21 +7,28 @@ import 'package:csv/csv.dart';
 // ground starts at 8:00, snort/argus at 13:00
 int minSeconds = 5 * 60 * 60 - 600;
 int maxSeconds = 5 * 60 * 60 + 600;
+List<String> oneRecord = new List<String>();
+List<String> lines = new List<String>();
+List<Truth> truthRecords = new List<Truth>();
+List<Netflow> netflowRecords = new List<Netflow>();
+int totalNetflowPackets;
+String sguilFile;
+String suriFile;
 
 void main(List<String> args) {
   print("minSeconds $minSeconds");
   print("maxSeconds $maxSeconds");
   //load file names
   String truthFile = args[0];
-  String sguilFile = args[1];
+  sguilFile = args[1];
   String argusFile = args[2];
+  suriFile = args[3];
 
   //empty lists of record objects
-  List<Truth> truthRecords = new List();
-  List<String> oneRecord = new List();
+  oneRecord.clear();
 
   // read truth data file into a list of lines
-  var lines = new File(truthFile).readAsLinesSync().map((line) => line.trim());
+  lines = new File(truthFile).readAsLinesSync().map((line) => line.trim());
   int lineCount = 0;
 
   lines.forEach((line) {
@@ -103,6 +110,47 @@ void main(List<String> args) {
   print("First ${truthRecords.first}");
   print("Last  ${truthRecords.last}");
 
+  //load argus netflow csv
+  //skip header row
+  lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
+  var rowsAsListOfValues = const CsvToListConverter().convert(lines);
+  rowsAsListOfValues.forEach((listOfValues) {
+    //ignore mac address records
+    if (listOfValues[3].contains(":")) return;
+
+    int srcPort = listOfValues[4] is int
+        ? listOfValues[4]
+        : parseNetflowPort(listOfValues[4]);
+    int destPort = listOfValues[7] is int
+        ? listOfValues[7]
+        : parseNetflowPort(listOfValues[7]);
+
+    netflowRecords.add(new Netflow(
+        listOfValues[0],
+        listOfValues[1],
+        listOfValues[2],
+        listOfValues[3],
+        srcPort,
+        listOfValues[5],
+        listOfValues[6],
+        destPort,
+        listOfValues[8],
+        listOfValues[9],
+        listOfValues[10]));
+  });
+
+  totalNetflowPackets = netflowRecords.fold(0, (sum, n) => sum + n.packets);
+
+  print(
+      "Netflow count: ${netflowRecords.length} packets: $totalNetflowPackets");
+  print("First ${netflowRecords.first}");
+  print("Last ${netflowRecords.last}");
+
+  snortMatrix();
+
+}
+
+snortMatrix(){
   //new lists of snort records
   List<Snort> snortRecords = new List();
   oneRecord.clear();
@@ -144,43 +192,6 @@ void main(List<String> args) {
   print("Snort count: ${snortRecords.length}");
   print("First ${snortRecords.first}");
   print("Last  ${snortRecords.last}");
-
-  //load argus netflow csv
-  List<Netflow> netflowRecords = new List();
-  //skip header row
-  lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
-  var rowsAsListOfValues = const CsvToListConverter().convert(lines);
-  rowsAsListOfValues.forEach((listOfValues) {
-    //ignore mac address records
-    if (listOfValues[3].contains(":")) return;
-
-    int srcPort = listOfValues[4] is int
-        ? listOfValues[4]
-        : parseNetflowPort(listOfValues[4]);
-    int destPort = listOfValues[7] is int
-        ? listOfValues[7]
-        : parseNetflowPort(listOfValues[7]);
-
-    netflowRecords.add(new Netflow(
-        listOfValues[0],
-        listOfValues[1],
-        listOfValues[2],
-        listOfValues[3],
-        srcPort,
-        listOfValues[5],
-        listOfValues[6],
-        destPort,
-        listOfValues[8],
-        listOfValues[9],
-        listOfValues[10]));
-  });
-
-  int totalNetflowPackets = netflowRecords.fold(0, (sum, n) => sum + n.packets);
-
-  print(
-      "Netflow count: ${netflowRecords.length} packets: $totalNetflowPackets");
-  print("First ${netflowRecords.first}");
-  print("Last ${netflowRecords.last}");
 
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
@@ -242,9 +253,91 @@ void main(List<String> args) {
       tn += n.packets;
     }
   });
+  
+  printMatrix(tp, fp, fn, tn, totalMatchingPackets);
 
+}
+
+suricataMatrix(){
+  //new list of suricata records
+  List<Suricata> suriRecords = new List();
+
+  //read suricata export data file into a list of lines
+  lines = new File(suriFile).readAsLinesSync();
+
+  print("First Suri Line: ${lines.first.toString()}");
+
+  print("Suri count: ${suriRecords.length}");
+  print("First ${suriRecords.first}");
+  print("Last  ${suriRecords.last}");
+
+  //for each Truth, look for match in snorts
+  List<Truth> matches = truthRecords.where((truth) {
+    //print("Match Truth: ${truth.id} ${truth.dateTime}");
+    var suriMatches = suriRecords.where((snort) {
+      return truth.attacker == suri.attacker &&
+          truth.victim == suri.victim &&
+          suri.dateTime.difference(truth.dateTime).inSeconds > minSeconds &&
+          suri.dateTime.difference(truth.dateTime).inSeconds <
+              maxSeconds + truth.duration.inSeconds &&
+          truth.ports.contains(suri.port);
+    }).toList();
+    truth.matches = suriMatches;
+
+    return suriMatches.length > 0;
+  }).toList();
+
+  var matchOutput = matches.join("\n");
+  print("True Positives matched: ${matches.length}");
+  print("False Positives: ${snortRecords.length - matches.length}");
+  print("Final matches:\n$matchOutput");
+
+  int totalMatchingPackets = 0;
+
+  matches.forEach((match) {
+    //find packet count
+    var netflows =
+        netflowRecords.where((netflow) => netflow.matchesTruth(match)).toList();
+    int packets = netflows.fold(0, (a, b) => a + b.packets);
+    print("Netflows Count: (${netflows.length}) Packets: $packets");
+    totalMatchingPackets += packets;
+  });
+
+  print("Final matching packets: $totalMatchingPackets");
+  print("Count packets into TP, FP, TN, FN");
+  int tn = 0;
+  int fn = 0;
+  int tp = 0;
+  int fp = 0;
+
+  netflowRecords
+      //.take(1000) // testing sample
+      .forEach((n) {
+    bool matchesTruth = truthRecords.any((t) => n.matchesTruth(t));
+    bool matchesSnort = snortRecords.any((s) => n.matchesSnort(s));
+    bool matchesBoth =
+        truthRecords.any((t) => n.matchesTruth(t) && t.matches.length > 0);
+    //print("$n Matches T/S/B: $matchesTruth $matchesSnort $matchesBoth");
+    if (matchesBoth) {
+      tp += n.packets;
+    } else if (matchesTruth) {
+      //matched truth record, but not snort alert, so false negative
+      fn += n.packets;
+    } else if (matchesSnort) {
+      //matched a snort record, but not a truth, so false positive
+      fp += n.packets;
+    } else {
+      //no match is normal traffic
+      tn += n.packets;
+    }
+  });
+  
+  printMatrix(tp, fp, fn, tn, totalMatchingPackets);
+
+}
+
+printMatrix(int tp, int fp, int fn, int tn, int totalMatchingPackets){
   //verify
-
   print("${tp + fp + fn + tn} == $totalNetflowPackets");
   print("$tp == $totalMatchingPackets");
   print("Confusion Matrix Packet Counts:");
@@ -252,6 +345,7 @@ void main(List<String> args) {
   print("False Negatives|True Negatives");
   print("$tp|$fp");
   print("$fn|$tn");
+
 }
 
 class Truth {
@@ -276,6 +370,23 @@ class Truth {
   String toString() =>
       "ID:$id DateTime:$dateTime Att:$attacker " +
       "Vic:$victim Dur:$duration Ports:$ports";
+}
+
+class Suricata {
+  String id;
+  String date;
+  String time;
+  String attacker;
+  String victim;
+  DateTime dateTime;
+  int port;
+
+  Suricata(this.id, this.date, this.time, this.attacker, this.victim, this.port) {
+    dateTime = DateTime.parse("$date $time");
+  }
+
+  String toString() =>
+      "ID:$id DateTime:$dateTime Att:$attacker Vic:$victim Port:$port";
 }
 
 class Snort {
