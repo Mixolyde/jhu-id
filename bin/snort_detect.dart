@@ -110,8 +110,8 @@ void main(List<String> args) {
   print("Last  ${truthRecords.last}");
 
   //load argus netflow csv
-  //skip header row
-  lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
+  //lines = new File(argusFile).readAsLinesSync().skip(1).join("\r\n");
+  lines = new File(argusFile).readAsLinesSync().join("\r\n");
   var rowsAsListOfValues = const CsvToListConverter().convert(lines);
   rowsAsListOfValues.forEach((listOfValues) {
     //ignore mac address records
@@ -145,7 +145,7 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
-  snortMatrix();
+  //snortMatrix();
   suricataMatrix();
 
 }
@@ -441,7 +441,7 @@ class Netflow {
       this.packets,
       this.bytes,
       this.state) {
-    this.startTime = DateTime.parse("1999-03-31 $startTime");
+    this.startTime = DateTime.parse("$startTime");
   }
 
   String toString() =>

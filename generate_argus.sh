@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "" > data/argusout_ports.csv
+rm data/argusout_ports.csv
 
 sudo argus -i eth0 -F /etc/nsm/pching-VM-eth1/argus.conf \
   -w - -r \

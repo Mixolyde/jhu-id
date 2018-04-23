@@ -89,6 +89,7 @@ outputs:
       enabled: yes
       type: file #file|syslog|unix_dgram|unix_stream
       filename: eve.json
+      append: yes
       # the following are valid when type: syslog above
       #identity: "suricata"
       #facility: local5
