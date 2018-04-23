@@ -102,8 +102,8 @@ void main(List<String> args) {
     }
   });
 
-  print("Culling truth dates we don't care about");
-  truthRecords.removeWhere((truth) => !truth.id.startsWith("43"));
+  //print("Culling truth dates we don't care about");
+  //truthRecords.removeWhere((truth) => !truth.id.startsWith("43"));
 
   print("Truth count: ${truthRecords.length}");
   print("First ${truthRecords.first}");
@@ -145,6 +145,7 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
+  snortMatrix();
   suricataMatrix();
 
 }
@@ -189,8 +190,8 @@ snortMatrix(){
   });
 
   print("Snort count: ${snortRecords.length}");
-  print("First ${snortRecords.first}");
-  print("Last  ${snortRecords.last}");
+  //print("First ${snortRecords.first}");
+  //print("Last  ${snortRecords.last}");
 
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
@@ -211,7 +212,7 @@ snortMatrix(){
   var matchOutput = matches.join("\n");
   print("True Positives matched: ${matches.length}");
   print("False Positives: ${snortRecords.length - matches.length}");
-  print("Final matches:\n$matchOutput");
+  //print("Final matches:\n$matchOutput");
 
   int totalMatchingPackets = 0;
 
@@ -220,12 +221,12 @@ snortMatrix(){
     var netflows =
         netflowRecords.where((netflow) => netflow.matchesTruth(match)).toList();
     int packets = netflows.fold(0, (a, b) => a + b.packets);
-    print("Netflows Count: (${netflows.length}) Packets: $packets");
+    //print("Netflows Count: (${netflows.length}) Packets: $packets");
     totalMatchingPackets += packets;
   });
 
-  print("Final matching packets: $totalMatchingPackets");
-  print("Count packets into TP, FP, TN, FN");
+  //print("Final matching packets: $totalMatchingPackets");
+  //print("Count packets into TP, FP, TN, FN");
   int tn = 0;
   int fn = 0;
   int tp = 0;
@@ -263,10 +264,10 @@ suricataMatrix(){
 
   //read suricata export data file into a list of lines
   lines = new File(suriFile).readAsLinesSync();
-  print("First Suri Line: ${lines.first.toString()}");
+  //print("First Suri Line: ${lines.first.toString()}");
 
   List<List> parsedList = lines.map((l) => JSON.decode(l)).toList();
-  print("First parsed Suri Line: ${parsedList[0]["src_ip"].toString()}");
+  //print("First parsed Suri Line: ${parsedList[0]["src_ip"].toString()}");
   parsedList.forEach((parsedMap) {
     String id = parsedMap["pcap_cnt"];
     DateTime dateTime = DateTime.parse(parsedMap["timestamp"]);
@@ -280,8 +281,8 @@ suricataMatrix(){
   });
 
   print("Suri count: ${suriRecords.length}");
-  print("First ${suriRecords.first}");
-  print("Last  ${suriRecords.last}");
+  //print("First ${suriRecords.first}");
+  //print("Last  ${suriRecords.last}");
 
   //for each Truth, look for match in snorts
   List<Truth> matches = truthRecords.where((truth) {
@@ -302,7 +303,7 @@ suricataMatrix(){
   var matchOutput = matches.join("\n");
   print("True Positives matched: ${matches.length}");
   print("False Positives: ${suriRecords.length - matches.length}");
-  print("Final matches:\n$matchOutput");
+  //print("Final matches:\n$matchOutput");
 
   int totalMatchingPackets = 0;
 
@@ -315,8 +316,8 @@ suricataMatrix(){
     totalMatchingPackets += packets;
   });
 
-  print("Final matching packets: $totalMatchingPackets");
-  print("Count packets into TP, FP, TN, FN");
+  //print("Final matching packets: $totalMatchingPackets");
+  //print("Count packets into TP, FP, TN, FN");
   int tn = 0;
   int fn = 0;
   int tp = 0;
