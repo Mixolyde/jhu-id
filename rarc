@@ -1,0 +1,2 @@
+RA_FIELD_DELIMITER=','
+RA_TIME_FORMAT="%m/%d/%Y %T"
