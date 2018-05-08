@@ -115,7 +115,7 @@ void main(List<String> args) {
   var rowsAsListOfValues = const CsvToListConverter().convert(lines);
   rowsAsListOfValues.forEach((listOfValues) {
     //ignore mac address records
-    if (listOfValues[3].contains(":")) return;
+    //if (listOfValues[3].contains(":")) return;
 
     int srcPort = listOfValues[4] is int
         ? listOfValues[4]
@@ -145,7 +145,7 @@ void main(List<String> args) {
   print("First ${netflowRecords.first}");
   print("Last ${netflowRecords.last}");
 
-  //snortMatrix();
+  snortMatrix();
   suricataMatrix();
 
 }

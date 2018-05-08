@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dart bin/snort_detect.dart data/master_identifications.list data/snort_alerts.txt data/argusout_ports.csv data/eve.json
+dart bin/snort_detect.dart data/master_identifications.list data/snort_alerts_99_w4.txt data/argusout_ports.csv data/eve.json

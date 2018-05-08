@@ -1,0 +1,24 @@
+minSeconds 17400
+maxSeconds 18600
+Truth count: 200
+First ID:41.084031 DateTime:1999-03-29 08:18:35.000 Att:209.154.98.104 Vic:172.16.112.50 Dur:0:46:05.000000 Ports:[23]
+Last  ID:55.204925 DateTime:1999-04-09 20:49:17.000 Att:204.71.51.16 Vic:172.16.112.100 Dur:0:43:47.000000 Ports:[20, 21, 23]
+Netflow count: 479761 packets: 2552133
+First 13:00:02.000 00:10:7b:38:46:33:null 00:10:7b:38:46:33:null 1
+Last 17:29:48.000 00:10:7b:38:46:33:null 00:10:7b:38:46:33:null 1
+Snort count: 98
+True Positives matched: 11
+False Positives: 87
+Confusion Matrix Packet Counts:
+True Positives|False Positives
+False Negatives|True Negatives
+1209|2417
+16589|2531918
+Suri count: 16412
+True Positives matched: 13
+False Positives: 16399
+Confusion Matrix Packet Counts:
+True Positives|False Positives
+False Negatives|True Negatives
+1218|30261
+16580|2504074
