@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm data/eve.json
+rm -f data/eve.json
 
 sudo suricata --user sguil --group sguil -c suricata.yaml \
   -l data -r ~/Downloads/99_w5/mon.inside.tcpdump --runmode=autofp \
